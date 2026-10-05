@@ -1,0 +1,102 @@
+# ============================================================
+# SAM — .gitignore
+# ============================================================
+
+# --- Secrets & Credentials (NEVER commit) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+sam_secrets.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+*.pyo
+.Python
+
+# --- Virtual environments ---
+.venv/
+venv/
+ENV/
+env/
+.env/
+
+# --- Testing & Coverage ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.coveragerc
+nosetests.xml
+test-results/
+
+# --- Data & Local Databases ---
+data/sam_memory.db
+data/sam_memory.db-*
+data/logs/
+data/screenshots/
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Config with real values (use .env.example instead) ---
+sam_config.yaml
+sam_config.json
+
+# --- Model weights / large binary assets ---
+models/
+*.bin
+*.pt
+*.onnx
+*.gguf
+*.safetensors
+
+# --- IDE / Editor ---
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Build artifacts ---
+*.spec
+*.exe
+*.msi
+
+# --- Teamwork agent internals (not project code) ---
+.agents/
+
+# --- Temporary files ---
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
