@@ -77,8 +77,8 @@ except ImportError:
         history: List[ConversationTurn] = Field(default_factory=list)
 
 
-# Memory Data Schemas
-class MemoryFact(BaseModel):
+# Memory Data Schemas (Fallback mock schemas)
+class _MockMemoryFact(BaseModel):
     id: Optional[int] = None
     content: str
     category: str = "general"
@@ -86,9 +86,13 @@ class MemoryFact(BaseModel):
     timestamp: float = Field(default_factory=time.time)
 
 
-class MemorySearchResult(BaseModel):
-    fact: MemoryFact
+class _MockMemorySearchResult(BaseModel):
+    fact: _MockMemoryFact
     similarity_score: float
+
+
+MemoryFact = _MockMemoryFact
+MemorySearchResult = _MockMemorySearchResult
 
 
 # Control Data Schemas
@@ -324,7 +328,7 @@ class BrainEngineAdapter:
         )
 
 
-class MemoryEngineAdapter:
+class MockMemoryEngineAdapter:
     """
     Contract-conforming persistent knowledge store using SQLite and vector similarity.
     Persists across restarts and supports fuzzy semantic retrieval.
@@ -439,6 +443,25 @@ class MemoryEngineAdapter:
                 shutil.rmtree(self._temp_dir, ignore_errors=True)
             except Exception:
                 pass
+
+
+# ---------------------------------------------------------------------------
+# Dynamic production binding with mock fallback for Memory subsystem
+# ---------------------------------------------------------------------------
+try:
+    from src.sam.memory import (
+        MemoryEngine as _ProdMemoryEngine,
+        MemoryFact as _ProdMemoryFact,
+        MemorySearchResult as _ProdMemorySearchResult,
+    )
+    MemoryEngineAdapter = _ProdMemoryEngine
+    MemoryFact = _ProdMemoryFact
+    MemorySearchResult = _ProdMemorySearchResult
+except ImportError:
+    # Existing mock definitions remain as fallback
+    MemoryEngineAdapter = MockMemoryEngineAdapter
+    MemoryFact = _MockMemoryFact
+    MemorySearchResult = _MockMemorySearchResult
 
 
 class SafetyGuardAdapter:

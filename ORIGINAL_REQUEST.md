@@ -76,3 +76,17 @@ SAM must have a consistent personality: helpful and mildly witty in casual inter
 ### Personality
 - [ ] CPU usage query returns a response with at least mild personality, not just a raw number
 - [ ] Task execution responses are concise and professional, not chatty
+
+
+## Follow-up — 2026-10-05T14:43:24Z
+
+The server restarted and all agents were stopped. Please resume SAM build from where you left off.
+
+Last known state before restart:
+- Milestone 1 COMPLETE and gated (90 unit + 37 adversarial tests passing, unanimous reviewer approval)
+- Milestone 2 (Persistent Memory Engine) was JUST starting — 3 exploratory agents (explorer_m2_1, explorer_m2_2, spec_miner_m2_3) had been dispatched for SQLite ACID storage, vector embeddings/cosine search, and memory specifications
+
+Please resume from Milestone 2. Check your internal state (plan.md, progress.md in .agents/) to see what the explorers delivered before the restart. If explorer results are present, proceed to dispatch the implementation worker for M2. If not, re-dispatch the explorers.
+
+Working directory: C:\Users\vedan\Downloads\sam
+Continue: M2 (memory/) → M3 (control/ + safety/) → M4 (vision/) → M5 (planner/) → M6 (voice/) → M7 (full integration + E2E)
