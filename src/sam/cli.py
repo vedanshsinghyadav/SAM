@@ -109,15 +109,33 @@ def main() -> None:
         action="version",
         version=f"SAM v{__version__}"
     )
+    parser.add_argument(
+        "command",
+        nargs="*",
+        default=[],
+        help="Optional prompt or mode ('voice', 'text', or a direct command like 'open chrome')"
+    )
 
     args = parser.parse_args()
 
+    mode = args.mode
+    prompt = args.prompt
+
+    if args.command:
+        joined_cmd = " ".join(args.command).strip()
+        if joined_cmd.lower() == "voice":
+            mode = "voice"
+        elif joined_cmd.lower() == "text":
+            mode = "text"
+        elif not prompt:
+            prompt = joined_cmd
+
     sam = SAMSystem()
     try:
-        if args.prompt:
-            turn = sam.process_turn(args.prompt, user_confirmed=True)
+        if prompt:
+            turn = sam.process_turn(prompt, user_confirmed=True)
             print(turn.get("styled_response") or turn.get("response_text"))
-        elif args.mode == "voice":
+        elif mode == "voice":
             run_voice_mode(sam)
         else:
             run_text_repl(sam)

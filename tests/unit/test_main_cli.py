@@ -79,3 +79,29 @@ class TestSAMCLI(unittest.TestCase):
 
         mock_instance.process_turn.assert_called_once_with("Run tests", user_confirmed=True)
         mock_instance.close.assert_called_once()
+
+    @patch("src.sam.cli.SAMSystem")
+    def test_cli_positional_prompt(self, mock_sam_class):
+        mock_instance = MagicMock()
+        mock_instance.process_turn.return_value = {
+            "styled_response": "Chrome opened."
+        }
+        mock_sam_class.return_value = mock_instance
+
+        with patch("sys.argv", ["sam", "open", "chrome"]):
+            cli_main()
+
+        mock_instance.process_turn.assert_called_once_with("open chrome", user_confirmed=True)
+        mock_instance.close.assert_called_once()
+
+    @patch("src.sam.cli.run_voice_mode")
+    @patch("src.sam.cli.SAMSystem")
+    def test_cli_positional_voice_mode(self, mock_sam_class, mock_run_voice):
+        mock_instance = MagicMock()
+        mock_sam_class.return_value = mock_instance
+
+        with patch("sys.argv", ["sam", "voice"]):
+            cli_main()
+
+        mock_run_voice.assert_called_once_with(mock_instance)
+        mock_instance.close.assert_called_once()
