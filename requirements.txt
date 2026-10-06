@@ -1,0 +1,17 @@
+# SAM Dependencies
+# Core Reasoning & Validation
+pydantic>=2.0.0
+
+# HTTP requests for Ollama/Cloud APIs
+httpx>=0.24.0
+
+# Screen Vision / Multimodal Capture
+mss>=9.0.0
+pillow>=10.0.0
+
+# CLI Formatting
+colorama>=0.4.6
+
+# Testing Suite (Development)
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
