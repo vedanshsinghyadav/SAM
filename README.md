@@ -120,20 +120,41 @@ pip install -r requirements.txt
 
 ---
 
+## Quick Start & Global Access
+
+### Register Global `sam` Command (Windows)
+Run the global launcher installer to enable typing `sam` directly in any CMD, PowerShell, or Windows Terminal window:
+```powershell
+.\scripts\install_global.bat
+```
+*(This also places a convenient `SAM.bat` launcher on your Desktop).*
+
+---
+
 ## Usage
 
-### Interactive Text REPL
+### 1. Global Terminal Access (from anywhere)
 ```powershell
+# Interactive Assistant
+sam
+
+# Spoken Audio Voice Mode
+sam voice
+
+# Direct One-Shot Command Execution
+sam "Open Chrome and go to YouTube"
+sam open chrome
+```
+
+### 2. Standard Python Invocation
+```powershell
+# Interactive Text REPL
 python -m src.sam.cli
-```
 
-### Voice Mode
-```powershell
+# Voice Mode
 python -m src.sam.cli --mode voice
-```
 
-### Single Command Execution
-```powershell
+# Single Command Execution
 python -m src.sam.cli --prompt "Open Chrome and go to YouTube"
 ```
 
