@@ -8,9 +8,9 @@ Part of Milestone 4: FEAT-VIS-001, FEAT-VIS-002, FEAT-CTRL-004.
 from __future__ import annotations
 
 import logging
-import os
 from typing import Optional, Tuple
 
+from src.sam.vision.analyzer import VisionAnalyzer
 from src.sam.vision.capture import ScreenCaptureEngine
 from src.sam.vision.client import MultimodalVisionClient
 from src.sam.vision.interface import IVisionEngine, VisionAnalysis
@@ -21,16 +21,18 @@ logger = logging.getLogger("sam.vision.engine")
 class VisionEngine(IVisionEngine):
     """
     Production Vision Engine for Project SAM.
-    Uses FreeLLMAPI multimodal tokens, local Ollama vision, and desktop screenshotting.
+    Coordinates desktop capture, multimodal AI inspection, and visual UI state verification.
     """
 
     def __init__(
         self,
         capture_engine: Optional[ScreenCaptureEngine] = None,
-        vision_client: Optional[MultimodalVisionClient] = None
+        vision_client: Optional[MultimodalVisionClient] = None,
+        analyzer: Optional[VisionAnalyzer] = None
     ):
         self.capture_engine = capture_engine or ScreenCaptureEngine()
         self.vision_client = vision_client or MultimodalVisionClient()
+        self.analyzer = analyzer or VisionAnalyzer(vision_client=self.vision_client)
 
         # Mock / Simulation hooks for deterministic testing and harness alignment
         self.mock_screen_text: str = ""
@@ -50,13 +52,25 @@ class VisionEngine(IVisionEngine):
         self.mock_error_detected = error_detected
         self.mock_error_message = error_message
 
+    def clear_mock_screen_state(self) -> None:
+        """Clear mock screen state and restore live mode."""
+        self._mock_mode = False
+        self.mock_screen_text = ""
+        self.mock_error_detected = False
+        self.mock_error_message = None
+
     def capture_screen(
         self,
         output_path: Optional[str] = None,
-        region: Optional[Tuple[int, int, int, int]] = None
+        region: Optional[Tuple[int, int, int, int]] = None,
+        monitor_index: Optional[int] = None
     ) -> str:
-        """Capture screenshot to disk and return the file path."""
-        return self.capture_engine.capture(output_path=output_path, region=region)
+        """Capture screenshot to disk and return the absolute file path."""
+        return self.capture_engine.capture(
+            output_path=output_path,
+            region=region,
+            monitor_index=monitor_index
+        )
 
     def inspect_screen(
         self,
@@ -66,10 +80,18 @@ class VisionEngine(IVisionEngine):
         """Inspect current screen state or provided image."""
         # 1. Check Mock / Injected State
         if self._mock_mode or self.mock_screen_text or self.mock_error_detected:
-            extracted = self.mock_screen_text or ("Error: [Errno 2] No such file or directory: 'syllabus.txt'" if self.mock_error_detected else "Desktop Workspace - Normal operation")
+            extracted = self.mock_screen_text or (
+                "Error: [Errno 2] No such file or directory: 'syllabus.txt'"
+                if self.mock_error_detected
+                else "Desktop Workspace - Normal operation"
+            )
             has_error = self.mock_error_detected or ("error" in extracted.lower())
             err_msg = self.mock_error_message or (extracted if has_error else None)
-            desc = "A modal system dialog indicating an unhandled file exception." if has_error else "Active desktop with normal application windows."
+            desc = (
+                "A modal system dialog indicating an unhandled file exception."
+                if has_error
+                else "Active desktop with normal application windows."
+            )
             return VisionAnalysis(
                 extracted_text=extracted,
                 description=desc,
@@ -77,22 +99,9 @@ class VisionEngine(IVisionEngine):
                 error_message=err_msg
             )
 
-        # 2. Live Capture & Inspection
+        # 2. Live Capture & Analyzer Inspection
         target_image = image_path or self.capture_screen()
-        extracted_text, error_detected, error_message = self.vision_client.inspect(query, target_image)
-
-        description = (
-            "An error dialog is active on screen."
-            if error_detected
-            else "Active desktop workspace with application windows."
-        )
-
-        return VisionAnalysis(
-            extracted_text=extracted_text,
-            description=description,
-            error_detected=error_detected,
-            error_message=error_message
-        )
+        return self.analyzer.inspect(query, target_image)
 
     def verify_ui_state(
         self,
@@ -109,16 +118,13 @@ class VisionEngine(IVisionEngine):
                 return True
             return not self.mock_error_detected
 
-        # Live verification
-        analysis = self.inspect_screen(f"Check if {expected_description} is visible on screen.")
-        if analysis.error_detected:
-            return False
-
-        if expected_description.lower() in analysis.extracted_text.lower():
-            return True
-
-        # Default verification passes if no conflicting errors are detected
-        return True
+        # Live verification via analyzer
+        target_image = self.capture_screen()
+        return self.analyzer.verify_ui_state(
+            expected_description=expected_description,
+            image_path=target_image,
+            before_image=before_image
+        )
 
     # ------------------------------------------------------------------------
     # Protocol Aliases (PROJECT.md contract alignment)

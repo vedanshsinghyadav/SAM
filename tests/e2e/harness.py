@@ -747,8 +747,12 @@ class MockVisionEngineAdapter:
 # Dynamic production binding with mock fallback for Vision subsystem
 # ---------------------------------------------------------------------------
 try:
-    from src.sam.vision import VisionEngine as _ProdVisionEngine
+    from src.sam.vision import (
+        VisionEngine as _ProdVisionEngine,
+        VisionAnalysis as _ProdVisionAnalysis,
+    )
     VisionEngineAdapter = _ProdVisionEngine
+    VisionAnalysis = _ProdVisionAnalysis
 except ImportError:
     VisionEngineAdapter = MockVisionEngineAdapter
 
@@ -1017,6 +1021,9 @@ class SAMSystemFacade:
             elif name == "inspect_screen":
                 vis = self.vision.inspect_screen(args.get("query", ""))
                 exec_res = ExecutionResult(success=True, output=vis.extracted_text)
+            elif name == "capture_screen":
+                path = self.vision.capture_screen(output_path=args.get("output_path"))
+                exec_res = ExecutionResult(success=True, output=path)
             else:
                 exec_res = ExecutionResult(success=True, output=f"Executed {name}")
 

@@ -71,6 +71,18 @@ class MultilingualIntentParser(IIntentParser):
         r"(?:downloads\s+se\s+latest\s+pdf.*move\s+karo)",
     ]
 
+    # 6. Screen inspection patterns (FEAT-VIS-001)
+    SCREEN_INSPECT_PATTERNS = [
+        r"(?:what\s+does\s+(?:this\s+)?error\s+say)",
+        r"(?:what\s+is\s+on\s+(?:the\s+)?screen)",
+        r"(?:read|inspect|check)\s+(?:the\s+)?screen",
+        r"(?:screen\s+par\s+kya\s+likha\s+hai)",
+        r"(?:error\s+(?:kya\s+hai|batao|padho))",
+        r"(?:ye\s+error\s+kya\s+keh\s+raha\s+hai)",
+        r"(?:what(?:'s|\s+is)\s+the\s+error)",
+        r"(?:check\s+my\s+screen)",
+    ]
+
     GREETING_PATTERN = r"\b(?:hey\s+sam|hello|hi|kaise\s+ho|who\s+are\s+you)\b"
 
     def __init__(self) -> None:
@@ -81,6 +93,7 @@ class MultilingualIntentParser(IIntentParser):
         self._cpu_regexes = [re.compile(p, re.IGNORECASE) for p in self.CPU_PATTERNS]
         self._delete_regexes = [re.compile(p, re.IGNORECASE) for p in self.DELETE_PATTERNS]
         self._plan_regexes = [re.compile(p, re.IGNORECASE) for p in self.PLAN_PATTERNS]
+        self._screen_inspect_regexes = [re.compile(p, re.IGNORECASE) for p in self.SCREEN_INSPECT_PATTERNS]
         self._greeting_regex = re.compile(self.GREETING_PATTERN, re.IGNORECASE)
 
     def parse(self, user_text: str, context: Optional[ActiveContext] = None) -> Optional[BrainDecision]:
@@ -260,7 +273,21 @@ class MultilingualIntentParser(IIntentParser):
                     confirmation_prompt=f"Are you sure you want to delete all files in {target_dir}? Confirm?",
                 )
 
-        # 8. Casual greetings & questions
+        # 8. Screen inspection actions (FEAT-VIS-001, ORIGINAL_REQUEST lines 28, 64)
+        for r in self._screen_inspect_regexes:
+            if r.search(lower_text):
+                return BrainDecision(
+                    decision_type="tool_call",
+                    reply_text="Inspecting the screen right now, sir.",
+                    tool_call=ToolCall(
+                        tool_name="inspect_screen",
+                        arguments={"query": text},
+                        risk_level=RiskLevel.LOW,
+                    ),
+                    requires_confirmation=False,
+                )
+
+        # 9. Casual greetings & questions
         if self._greeting_regex.search(lower_text):
             return BrainDecision(
                 decision_type="reply",

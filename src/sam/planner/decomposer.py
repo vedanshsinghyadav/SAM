@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import urllib.request
 import urllib.error
@@ -19,8 +20,8 @@ from src.sam.planner.interface import Plan, PlanStep
 
 logger = logging.getLogger("sam.planner.decomposer")
 
-FREELLMAPI_URL = "http://127.0.0.1:31415"
-FREELLMAPI_KEY = "freellmapi-377f6201502f3b869cf10627c8f4fa683927dc3132fcd9e6"
+FREELLMAPI_URL = os.environ.get("FREELLMAPI_URL", "http://127.0.0.1:31415")
+FREELLMAPI_KEY = os.environ.get("FREELLMAPI_KEY", "")
 
 
 class GoalDecomposer:

@@ -7,10 +7,12 @@ Part of Milestone 4: FEAT-VIS-001, FEAT-VIS-002, FEAT-CTRL-004.
 from __future__ import annotations
 
 from typing import Optional, Protocol, Tuple, runtime_checkable
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from src.sam.common.types import CompatibleBaseModel
 
 
-class VisionAnalysis(BaseModel):
+class VisionAnalysis(CompatibleBaseModel):
     """Structured result of a desktop screen visual analysis."""
     extracted_text: str = Field(default="", description="Text extracted from screen OCR / vision model.")
     description: str = Field(default="", description="High-level description of visible window layout.")
@@ -25,7 +27,8 @@ class IVisionEngine(Protocol):
     def capture_screen(
         self,
         output_path: Optional[str] = None,
-        region: Optional[Tuple[int, int, int, int]] = None
+        region: Optional[Tuple[int, int, int, int]] = None,
+        monitor_index: Optional[int] = None
     ) -> str:
         """Capture screenshot to disk and return the file path."""
         ...
