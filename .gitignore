@@ -104,3 +104,9 @@ temp/
 # --- Understand Anything data directory ---
 .ua/
 .understand-anything/
+
+# --- Scratch & Cache Directories ---
+.mypy_cache/
+.ruff_cache/
+*.png
+!docs/**/*.png
