@@ -184,3 +184,7 @@ Please proceed immediately with Milestone 4 (Screen Vision & Multimodal Inspecti
 - Bind production VisionEngine into tests/e2e/harness.py.
 - Author comprehensive unit tests in tests/unit/test_vision.py.
 - Validate against Tier 1 and Tier 2 vision test suites.
+
+## Follow-up — 2026-10-06T12:18:56Z
+
+Milestones 5 (Planner & Router), 6 (Voice Interface & Wake Word), and 7 (Full System Integration & Runner CLI) are implemented, verified (678/678 tests pass: 331 unit + 347 E2E), committed (d95cf6d), and pushed to origin main. Zero leaked keys verified.

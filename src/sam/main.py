@@ -18,7 +18,7 @@ from typing import Any, Callable, Dict, Optional
 from src.sam.brain.ollama_client import OllamaBrain
 from src.sam.common.config import SamConfig, get_config
 from src.sam.common.network import is_online
-from src.sam.common.types import ActiveContext, BrainDecision, ConversationTurn, RiskLevel
+from src.sam.common.types import ActiveContext, BrainDecision, ConversationTurn, ExecutionResult, RiskLevel
 from src.sam.control.controller import ComputerController
 from src.sam.memory import MemoryEngine
 from src.sam.personality.adapter import PersonalityAdapter
@@ -133,7 +133,6 @@ class SAMSystem:
                 stats = self.controller.get_system_stats()
                 res = ExecutionResult(success=True, output=stats)
             else:
-                from src.sam.common.types import ExecutionResult
                 res = ExecutionResult(success=True, output=f"Executed {tool_name}")
 
             result["executed"] = res.success
@@ -142,10 +141,10 @@ class SAMSystem:
         # 4. Multi-step Plan Execution
         elif decision.decision_type == "plan":
             plan = self.planner.create_plan(decision.plan_goal or user_input)
-            plan_res = self.planner.execute_plan(plan, auto_recover=True)
+            plan_res = self.planner.execute_plan(plan)
             result["plan"] = plan
             result["executed"] = plan_res.success
-            result["output"] = plan_res.summary
+            result["output"] = f"Completed {plan_res.completed_steps}/{len(plan.steps)} steps."
 
         # 5. Personality Tone Adaptation
         styled_response = self.personality.adapt_tone(
