@@ -120,20 +120,36 @@ pip install -r requirements.txt
 
 ---
 
-## Quick Start & Global Access
+## Quick Start & Direct Access
 
-### Register Global `sam` Command (Windows)
-Run the global launcher installer to enable typing `sam` directly in any CMD, PowerShell, or Windows Terminal window:
+### 1. Direct Desktop GUI App (No CMD / Terminal)
+SAM includes a sleek, dark-themed native Windows desktop interface requiring **zero CMD windows**:
+- **From Desktop**: Double-click the **`SAM AI`** shortcut (or **`SAM (Direct).vbs`**).
+- **From Repository**: Double-click [`launch_gui.vbs`](file:///c:/Users/vedan/Downloads/sam/launch_gui.vbs) or run:
+  ```powershell
+  pythonw -m src.sam.gui.app
+  ```
+- Features: Real-time system status, one-click Voice Mode toggle, quick action chips, and interactive safety confirmation banners.
+
+---
+
+### 2. Global Terminal Access (`sam` Command)
+To also enable the `sam` terminal command globally in any Command Prompt or PowerShell:
 ```powershell
 .\scripts\install_global.bat
 ```
-*(This also places a convenient `SAM.bat` launcher on your Desktop).*
+*(Automatically registers the global CLI command and refreshes the desktop shortcut).*
 
 ---
 
 ## Usage
 
-### 1. Global Terminal Access (from anywhere)
+### 1. Desktop GUI Application
+```powershell
+pythonw -m src.sam.gui.app
+```
+
+### 2. Global Command-Line Access (from anywhere)
 ```powershell
 # Interactive Assistant
 sam
