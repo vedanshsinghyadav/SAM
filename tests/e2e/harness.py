@@ -880,7 +880,7 @@ except ImportError:
     TaskPlannerAdapter = MockTaskPlannerAdapter
 
 
-class VoiceInterfaceAdapter:
+class MockVoiceInterfaceAdapter:
     """
     Contract-conforming implementation of IVoiceInterface.
     Simulates wake word detection (<2s), STT transcription, TTS synthesis,
@@ -921,6 +921,17 @@ class VoiceInterfaceAdapter:
 
     def stop_speaking(self) -> None:
         self.is_speaking = False
+
+
+# ---------------------------------------------------------------------------
+# Dynamic production binding with mock fallback for Voice subsystem
+# ---------------------------------------------------------------------------
+try:
+    from src.sam.voice import VoiceEngine as _ProdVoiceEngine
+    VoiceInterfaceAdapter = _ProdVoiceEngine
+except ImportError:
+    VoiceInterfaceAdapter = MockVoiceInterfaceAdapter
+
 
 
 class PersonalityAdapter:
