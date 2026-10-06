@@ -46,15 +46,10 @@ echo   - %TARGET_BIN%\sam.cmd
 echo.
 echo You can now run 'sam' from any Command Prompt or PowerShell!
 
-REM Create Desktop shortcut if Desktop exists
+REM Create Desktop shortcut without CMD if Desktop exists
 if exist "%USERPROFILE%\Desktop" (
-    (
-        echo @echo off
-        echo title SAM Assistant
-        echo call "%TARGET_BIN%\sam.cmd"
-        echo pause
-    ) > "%USERPROFILE%\Desktop\SAM.bat"
-    echo [SUCCESS] Desktop launcher created: "%USERPROFILE%\Desktop\SAM.bat"
+    python "%REPO_ROOT%\scripts\create_shortcut.py"
+    copy /y "%REPO_ROOT%\launch_gui.vbs" "%USERPROFILE%\Desktop\SAM (Direct).vbs" >nul
 )
 
 echo ======================================================================
