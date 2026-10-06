@@ -692,7 +692,7 @@ except ImportError:
     ComputerControllerAdapter = MockComputerControllerAdapter
 
 
-class VisionEngineAdapter:
+class MockVisionEngineAdapter:
     """
     Contract-conforming implementation of IVisionEngine.
     Provides desktop capture, multimodal inspection, and UI action verification.
@@ -741,6 +741,16 @@ class VisionEngineAdapter:
             return True
         # Default verification passes if no conflicting errors
         return not self.mock_error_detected
+
+
+# ---------------------------------------------------------------------------
+# Dynamic production binding with mock fallback for Vision subsystem
+# ---------------------------------------------------------------------------
+try:
+    from src.sam.vision import VisionEngine as _ProdVisionEngine
+    VisionEngineAdapter = _ProdVisionEngine
+except ImportError:
+    VisionEngineAdapter = MockVisionEngineAdapter
 
 
 class TaskPlannerAdapter:
