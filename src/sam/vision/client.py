@@ -21,8 +21,8 @@ import urllib.error
 
 logger = logging.getLogger("sam.vision.client")
 
-DEFAULT_FREELLMAPI_URL = "http://127.0.0.1:31415"
-DEFAULT_FREELLMAPI_KEY = "freellmapi-377f6201502f3b869cf10627c8f4fa683927dc3132fcd9e6"
+DEFAULT_FREELLMAPI_URL = os.environ.get("FREELLMAPI_URL", "http://127.0.0.1:31415")
+DEFAULT_FREELLMAPI_KEY = os.environ.get("FREELLMAPI_KEY", "")
 
 
 def encode_image_to_base64(image_path: str) -> Optional[str]:

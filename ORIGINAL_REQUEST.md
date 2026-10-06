@@ -173,3 +173,14 @@ SAM must have a consistent personality: helpful and mildly witty in casual inter
 ### Personality (Verified M1)
 - [x] CPU usage query returns a response with at least mild personality, not just a raw number
 - [x] Task execution responses are concise and professional, not chatty
+
+## Follow-up — 2026-10-06T11:45:56Z
+
+Milestone 3 (Windows Control Suite & Safety Guard) is fully complete, verified (all 281 unit tests + 130 E2E control/safety tests pass), and pushed to GitHub main (commit 83226f2).
+
+Please proceed immediately with Milestone 4 (Screen Vision & Multimodal Inspection):
+- Implement src/sam/vision/ adhering to IVisionEngine (capture_screen, analyze_screen, verify_action_result).
+- Support multimodal vision using FreeLLMAPI (http://127.0.0.1:31415/v1) with fallback to local Ollama vision.
+- Bind production VisionEngine into tests/e2e/harness.py.
+- Author comprehensive unit tests in tests/unit/test_vision.py.
+- Validate against Tier 1 and Tier 2 vision test suites.

@@ -753,7 +753,7 @@ except ImportError:
     VisionEngineAdapter = MockVisionEngineAdapter
 
 
-class TaskPlannerAdapter:
+class MockTaskPlannerAdapter:
     """
     Contract-conforming implementation of ITaskPlanner.
     Decomposes goals, routes tools, executes steps with atomic verification,
@@ -862,6 +862,22 @@ class TaskPlannerAdapter:
         )
         plan.steps[failed_step_index] = alt_step
         return plan
+
+
+# ---------------------------------------------------------------------------
+# Dynamic production binding with mock fallback for Planner subsystem
+# ---------------------------------------------------------------------------
+try:
+    from src.sam.planner import (
+        TaskPlanner as _ProdTaskPlanner,
+        Plan as _ProdPlan,
+        PlanStep as _ProdPlanStep,
+    )
+    TaskPlannerAdapter = _ProdTaskPlanner
+    Plan = _ProdPlan
+    PlanStep = _ProdPlanStep
+except ImportError:
+    TaskPlannerAdapter = MockTaskPlannerAdapter
 
 
 class VoiceInterfaceAdapter:
