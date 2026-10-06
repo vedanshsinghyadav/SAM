@@ -84,13 +84,13 @@ Every feature cataloged in `PROJECT.md` is covered with >= 5 Tier 1 tests and >=
 
 ## 4. Test File Manifest
 
-1. `C:\Users\vedan\Downloads\sam\TEST_INFRA.md`: Complete E2E testing infrastructure specification.
-2. `C:\Users\vedan\Downloads\sam\TEST_READY.md`: Test readiness audit, feature checklist, and metrics.
-3. `C:\Users\vedan\Downloads\sam\tests\e2e\runner.py`: CLI test runner with tier filtering, summary table, and exit code 0.
-4. `C:\Users\vedan\Downloads\sam\tests\e2e\harness.py`: Contract-binding adapter layer and mockable environment hooks.
-5. `C:\Users\vedan\Downloads\sam\tests\e2e\fixtures.py`: Test dataset generators, temporary workspace managers.
-6. `C:\Users\vedan\Downloads\sam\tests\e2e\conftest.py`: Global pytest configuration and fixtures.
-7. `C:\Users\vedan\Downloads\sam\tests\e2e\tier1_features\`:
+1. `TEST_INFRA.md`: Complete E2E testing infrastructure specification.
+2. `TEST_READY.md`: Test readiness audit, feature checklist, and metrics.
+3. `tests/e2e/runner.py`: CLI test runner with tier filtering, summary table, and exit code 0.
+4. `tests/e2e/harness.py`: Contract-binding adapter layer and mockable environment hooks.
+5. `tests/e2e/fixtures.py`: Test dataset generators, temporary workspace managers.
+6. `tests/e2e/conftest.py`: Global pytest configuration and fixtures.
+7. `tests/e2e/tier1_features/`:
    - `test_voice_features.py` (25 tests)
    - `test_brain_features.py` (20 tests)
    - `test_memory_features.py` (10 tests)
@@ -99,7 +99,7 @@ Every feature cataloged in `PROJECT.md` is covered with >= 5 Tier 1 tests and >=
    - `test_planner_features.py` (15 tests)
    - `test_safety_features.py` (20 tests)
    - `test_personality_features.py` (10 tests)
-8. `C:\Users\vedan\Downloads\sam\tests\e2e\tier2_boundaries\`:
+8. `tests/e2e/tier2_boundaries/`:
    - `test_voice_boundaries.py` (25 tests)
    - `test_brain_boundaries.py` (20 tests)
    - `test_memory_boundaries.py` (10 tests)
@@ -108,9 +108,9 @@ Every feature cataloged in `PROJECT.md` is covered with >= 5 Tier 1 tests and >=
    - `test_planner_boundaries.py` (15 tests)
    - `test_safety_boundaries.py` (20 tests)
    - `test_personality_boundaries.py` (10 tests)
-9. `C:\Users\vedan\Downloads\sam\tests\e2e\tier3_interactions\`:
+9. `tests/e2e/tier3_interactions/`:
    - `test_cross_feature_interactions.py` (20 tests)
-10. `C:\Users\vedan\Downloads\sam\tests\e2e\tier4_scenarios\`:
+10. `tests/e2e/tier4_scenarios/`:
     - `test_real_world_scenarios.py` (17 tests)
 
 ---

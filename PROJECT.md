@@ -307,9 +307,8 @@ class IVoiceInterface(Protocol):
 ---
 
 ## Code Layout
-
 ```
-C:\Users\vedan\Downloads\sam\
+sam/
 ├── PROJECT.md                      # Project master architecture & milestone registry
 ├── requirements.txt                # Pinned production dependencies
 ├── setup.py / pyproject.toml       # Package metadata
