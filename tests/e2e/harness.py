@@ -464,7 +464,7 @@ except ImportError:
     MemorySearchResult = _MockMemorySearchResult
 
 
-class SafetyGuardAdapter:
+class MockSafetyGuardAdapter:
     """
     Contract-conforming implementation of ISafetyGuard.
     Enforces Tri-Tier Risk Classification:
@@ -511,13 +511,15 @@ class SafetyGuardAdapter:
         return False, "Blocked: Unknown risk classification"
 
 
-class ComputerControllerAdapter:
+class MockComputerControllerAdapter:
     """
     Contract-conforming implementation of IComputerController.
     Handles App Lifecycle, Windows, Files, Volume, Brightness, Media, Terminal.
     """
     def __init__(self, workspace_root: Optional[str] = None):
         self.workspace_root = workspace_root or tempfile.gettempdir()
+        os.makedirs(self.workspace_root, exist_ok=True)
+        os.makedirs(os.path.join(self.workspace_root, "Downloads"), exist_ok=True)
         self.running_apps: Dict[str, int] = {}
         self.current_volume: int = 50
         self.current_brightness: int = 70
@@ -581,7 +583,7 @@ class ComputerControllerAdapter:
                 if not src or not dst:
                     return ExecutionResult(success=False, output=None, error_message="Source and destination required")
                 if not os.path.exists(src):
-                    return ExecutionResult(success=False, output=None, error_message=f"Source file '{src}' not found")
+                    return ExecutionResult(success=False, output=None, error_message=f"Source file '{src}' not found", verification_passed=False)
                 os.makedirs(os.path.dirname(os.path.abspath(dst)), exist_ok=True)
                 shutil.move(src, dst)
                 return ExecutionResult(success=True, output=dst, verification_passed=os.path.exists(dst))
@@ -672,6 +674,22 @@ class ComputerControllerAdapter:
 
     def read_notifications(self) -> List[Dict[str, Any]]:
         return list(self.notifications)
+
+
+# ---------------------------------------------------------------------------
+# Dynamic production binding with mock fallback for Safety & Control subsystems
+# ---------------------------------------------------------------------------
+try:
+    from src.sam.safety import SafetyGuard as _ProdSafetyGuard
+    SafetyGuardAdapter = _ProdSafetyGuard
+except ImportError:
+    SafetyGuardAdapter = MockSafetyGuardAdapter
+
+try:
+    from src.sam.control import ComputerController as _ProdComputerController
+    ComputerControllerAdapter = _ProdComputerController
+except ImportError:
+    ComputerControllerAdapter = MockComputerControllerAdapter
 
 
 class VisionEngineAdapter:

@@ -100,3 +100,7 @@ temp/
 *.tmp
 *.bak
 *.orig
+
+# --- Understand Anything data directory ---
+.ua/
+.understand-anything/
